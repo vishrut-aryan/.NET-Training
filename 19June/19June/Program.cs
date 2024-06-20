@@ -1,13 +1,12 @@
 ﻿using System;
 using System.IO;
-using System.Xml.Linq;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using IronXL;
-using IronPdf;
 using System.Xml.Serialization;
+using iText.Kernel.Pdf;
+using iText.Layout;
+using iText.Layout.Element;
 
 namespace _19June
 {
@@ -49,96 +48,74 @@ namespace _19June
             return salary * (1 - tax);
         }
 
-        static void Main(string[] args) 
+        static void Append_to_PDF(Document document, string emp_id, string emp_name, string salary_str, string tax_str, string pf_str)
         {
-            //save text, save excel, save xml, save pdf
-            char y = 'Y';
-            do
+            document.Add(new Paragraph("Employee Details"));
+            document.Add(new Paragraph("Employee ID:     " + emp_id));
+            document.Add(new Paragraph("Employee Name:   " + emp_name));
+            document.Add(new Paragraph("Employee Salary: " + salary_str));
+            document.Add(new Paragraph("Employee Tax:    " + tax_str));
+            document.Add(new Paragraph("Employee PF:     " + pf_str));
+            document.Add(new Paragraph(""));
+            document.Add(new Paragraph(""));
+        }
+
+        public void export_to_text_file()
+        {
+            string fileName = "Employee Details.txt";
+            string priorText = File.ReadAllText(fileName);
+
+            using (StreamWriter writer = new StreamWriter(fileName))
             {
-                Console.WriteLine("Enter the Employee ID: ");
-                string emp_id = Console.ReadLine();
-                Console.WriteLine();
-
-                Console.WriteLine("Enter the Employee Name: ");
-                string emp_name = Console.ReadLine();
-                Console.WriteLine();
-
-                Console.WriteLine("Enter the Employee Salary: ");
-                int salary = Convert.ToInt32(Console.ReadLine());
-                string salary_str = Convert.ToString(salary);
-                Console.WriteLine();
-
-                double tax = tax_calc(salary);
-                string tax_str = Convert.ToString(tax);
-                double pf = 0.12 * salary;
-                string pf_str = Convert.ToString(pf);
-
-                var html_input = $@"
-                    <h1>Employee Details</h1>
-                    <p><strong>Employee ID:</strong> {emp_id}</p>
-                    <p><strong>Employee Name:</strong> {emp_name}</p>
-                    <p><strong>Employee Salary:</strong> {salary}</p>
-                    <p><strong>Tax:</strong> {tax_str}</p>
-                    <p><strong>PF:</strong> {pf_str}</p>
-                ";
-
-                var Renderer = new IronPdf.ChromePdfRenderer();
-                using (PdfDocument Pdf = Renderer.RenderHtmlAsPdf(html_input))
+                char y = 'Y';
+                do
                 {
-                    Pdf.SaveAs("employee_details.pdf");
-                }
+                    Console.WriteLine("Enter the Employee ID: ");
+                    string emp_id = Console.ReadLine();
+                    Console.WriteLine();
+
+                    Console.WriteLine("Enter the Employee Name: ");
+                    string emp_name = Console.ReadLine();
+                    Console.WriteLine();
+
+                    Console.WriteLine("Enter the Employee Salary: ");
+                    int salary = Convert.ToInt32(Console.ReadLine());
+                    Console.WriteLine();
+
+                    double tax = tax_calc(salary);
+                    double pf = 0.12 * salary;
+
+                    writer.WriteLine("Employee ID:     " + emp_id);
+                    writer.WriteLine("Employee Name:   " + emp_name);
+                    writer.WriteLine("Employee Salary: " + salary);
+                    writer.WriteLine("Employee Tax:    " + tax);
+                    writer.WriteLine("Employee PF:     " + pf);
+                    writer.WriteLine("");
+
+                    Console.WriteLine("Would you like to record another Employee? Enter Y if yes");
+                    y = Convert.ToChar(Console.ReadLine().ToUpper());
+                    Console.WriteLine();
+                } while (y == 'Y');
             }
-            while (y == 'Y');
 
-
-
-
-
-            /*char y = 'Y';
-            List<EmployeeDetails> employees = new List<EmployeeDetails>();
-            do
+            string readText = File.ReadAllText(fileName);
+            using (StreamWriter writer = new StreamWriter(fileName))
             {
-                Console.WriteLine("Enter the Employee ID: ");
-                string emp_id = Console.ReadLine();
-                Console.WriteLine();
-
-                Console.WriteLine("Enter the Employee Name: ");
-                string emp_name = Console.ReadLine();
-                Console.WriteLine();
-
-                Console.WriteLine("Enter the Employee Salary: ");
-                int salary = Convert.ToInt32(Console.ReadLine());
-                Console.WriteLine();
-
-                double tax = tax_calc(salary);
-                double pf = 0.12 * salary;
-
-                EmployeeDetails emp = new EmployeeDetails
+                Console.WriteLine("Would you like to clear the file before writing? Enter Y if yes");
+                if ("Y" != Console.ReadLine().ToUpper())
                 {
-                    EmployeeID = emp_id,
-                    EmployeeName = emp_name,
-                    Salary = salary,
-                    Tax = tax,
-                    PF = pf
-                };
-                employees.Add(emp);
+                    writer.WriteLine(priorText);
+                }
+                writer.WriteLine(readText);
+            }
 
-                Console.WriteLine("Would you like to record another Employee? Enter Y if yes");
-                y = Convert.ToChar(Console.ReadLine().ToUpper());
-                Console.WriteLine();
-            } 
-            while (y == 'Y');
+            string finalReadText = File.ReadAllText(fileName);
+            Console.WriteLine(finalReadText);
+        }
 
-            string fileName = "Employee Details.xml";
-            XmlSerializer serializer = new XmlSerializer(typeof(List<EmployeeDetails>));
-            using (FileStream fs = new FileStream(fileName, FileMode.Append, FileAccess.Write))
-            {
-                serializer.Serialize(fs, employees);
-            }*/
-
-
-
-            /*int unicode = 65;
+        public void export_to_pdf()
+        {
+            int unicode = 65;
             int emp_no = 3;
             char y = 'Y';
             do
@@ -190,15 +167,65 @@ namespace _19June
                 y = Convert.ToChar(Console.ReadLine().ToUpper());
                 emp_no++;
                 Console.WriteLine();
-            } while (y == 'Y');*/
+            } 
+            while (y == 'Y');
+        }
 
-
-
-            /*string fileName = "Employee Details.txt";
-            string priorText = File.ReadAllText(fileName);
-
-            using (StreamWriter writer = new StreamWriter(fileName))
+        public void export_to_xml()
+        {
+            char y = 'Y';
+            List<EmployeeDetails> employees = new List<EmployeeDetails>();
+            do
             {
+                Console.WriteLine("Enter the Employee ID: ");
+                string emp_id = Console.ReadLine();
+                Console.WriteLine();
+
+                Console.WriteLine("Enter the Employee Name: ");
+                string emp_name = Console.ReadLine();
+                Console.WriteLine();
+
+                Console.WriteLine("Enter the Employee Salary: ");
+                int salary = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine();
+
+                double tax = tax_calc(salary);
+                double pf = 0.12 * salary;
+
+                EmployeeDetails emp = new EmployeeDetails
+                {
+                    EmployeeID = emp_id,
+                    EmployeeName = emp_name,
+                    Salary = salary,
+                    Tax = tax,
+                    PF = pf
+                };
+                employees.Add(emp);
+
+                Console.WriteLine("Would you like to record another Employee? Enter Y if yes");
+                y = Convert.ToChar(Console.ReadLine().ToUpper());
+                Console.WriteLine();
+            }
+            while (y == 'Y');
+
+            string fileName = "Employee Details.xml";
+            XmlSerializer serializer = new XmlSerializer(typeof(List<EmployeeDetails>));
+            using (FileStream fs = new FileStream(fileName, FileMode.Append, FileAccess.Write))
+            {
+                serializer.Serialize(fs, employees);
+            }
+        }
+
+        static void Main(string[] args) 
+        {
+            //save text, save excel, save xml, save pdf
+            try
+            {
+                string fileName = "employee_details.pdf";
+                PdfWriter writer = new PdfWriter(fileName);
+                PdfDocument pdf = new PdfDocument(writer);
+                Document document = new Document(pdf);
+
                 char y = 'Y';
                 do
                 {
@@ -212,37 +239,31 @@ namespace _19June
 
                     Console.WriteLine("Enter the Employee Salary: ");
                     int salary = Convert.ToInt32(Console.ReadLine());
+                    string salary_str = Convert.ToString(salary);
                     Console.WriteLine();
 
                     double tax = tax_calc(salary);
+                    string tax_str = Convert.ToString(tax);
                     double pf = 0.12 * salary;
+                    string pf_str = Convert.ToString(pf);
 
-                    writer.WriteLine("Employee ID:     " + emp_id);
-                    writer.WriteLine("Employee Name:   " + emp_name);
-                    writer.WriteLine("Employee Salary: " + salary);
-                    writer.WriteLine("Employee Tax:    " + tax);
-                    writer.WriteLine("Employee PF:     " + pf);
-                    writer.WriteLine("");
+                    // Create the PDF document
+                    Append_to_PDF(document, emp_id, emp_name, salary_str, tax_str, pf_str);
 
                     Console.WriteLine("Would you like to record another Employee? Enter Y if yes");
                     y = Convert.ToChar(Console.ReadLine().ToUpper());
                     Console.WriteLine();
-                } while (y == 'Y');
-            }
-
-            string readText = File.ReadAllText(fileName);
-            using (StreamWriter writer = new StreamWriter(fileName))
-            {
-                Console.WriteLine("Would you like to clear the file before writing? Enter Y if yes");
-                if ("Y" != Console.ReadLine().ToUpper())
-                {
-                    writer.WriteLine(priorText);
                 }
-                writer.WriteLine(readText);
+                while (y == 'Y');
+                document.Close();
             }
 
-            string finalReadText = File.ReadAllText(fileName);
-            Console.WriteLine(finalReadText);*/
+            //catch (PdfException ex) { Console.WriteLine("An unexpected error occurred: " + ex.Message); }
+
+            catch (Exception ex) 
+            {
+                Console.WriteLine("An unexpected error occurred: " + ex.Message);
+            }
 
 
 
