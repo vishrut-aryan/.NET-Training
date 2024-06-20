@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using iText.Kernel.Pdf;
 using iText.Layout;
 using iText.Layout.Element;
+using System.ComponentModel.Composition.Primitives;
 
 namespace _19June
 {
@@ -60,7 +61,56 @@ namespace _19June
             document.Add(new Paragraph(""));
         }
 
-        public void export_to_text_file()
+        static void export_to_pdf()
+        {
+            try
+            {
+                string fileName = "employee_details.pdf";
+                PdfWriter writer = new PdfWriter(fileName);
+                PdfDocument pdf = new PdfDocument(writer);
+                Document document = new Document(pdf);
+
+                char y = 'Y';
+                do
+                {
+                    Console.WriteLine("Enter the Employee ID: ");
+                    string emp_id = Console.ReadLine();
+                    Console.WriteLine();
+
+                    Console.WriteLine("Enter the Employee Name: ");
+                    string emp_name = Console.ReadLine();
+                    Console.WriteLine();
+
+                    Console.WriteLine("Enter the Employee Salary: ");
+                    int salary = Convert.ToInt32(Console.ReadLine());
+                    string salary_str = Convert.ToString(salary);
+                    Console.WriteLine();
+
+                    double tax = tax_calc(salary);
+                    string tax_str = Convert.ToString(tax);
+                    double pf = 0.12 * salary;
+                    string pf_str = Convert.ToString(pf);
+
+                    // Create the PDF document
+                    Append_to_PDF(document, emp_id, emp_name, salary_str, tax_str, pf_str);
+
+                    Console.WriteLine("Would you like to record another Employee? Enter Y if yes");
+                    y = Convert.ToChar(Console.ReadLine().ToUpper());
+                    Console.WriteLine();
+                }
+                while (y == 'Y');
+                document.Close();
+            }
+
+            //catch (PdfException ex) { Console.WriteLine("An unexpected error occurred: " + ex.Message); }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine("An unexpected error occurred: " + ex.Message);
+            }
+        }
+
+        static void export_to_text_file()
         {
             string fileName = "Employee Details.txt";
             string priorText = File.ReadAllText(fileName);
@@ -113,7 +163,7 @@ namespace _19June
             Console.WriteLine(finalReadText);
         }
 
-        public void export_to_pdf()
+        static void export_to_excel()
         {
             int unicode = 65;
             int emp_no = 3;
@@ -171,10 +221,32 @@ namespace _19June
             while (y == 'Y');
         }
 
-        public void export_to_xml()
+        static void export_to_xml()
         {
             char y = 'Y';
             List<EmployeeDetails> employees = new List<EmployeeDetails>();
+
+            string fileName = "EmployeeDetails.xml";
+            XmlSerializer serializer = new XmlSerializer(typeof(List<EmployeeDetails>));
+
+            Console.WriteLine("Would you like to clear the file before write? Enter Y if yes");
+            string ch = Console.ReadLine().ToUpper();
+            Console.WriteLine();
+            if (ch != "Y")
+            {
+                if (File.Exists(fileName))
+                {
+                    using (FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+                    {
+                        if (fs.Length > 0) // Check if file is not empty
+                        {
+                            List<EmployeeDetails> existingEmployees = (List<EmployeeDetails>)serializer.Deserialize(fs);
+                            employees.AddRange(existingEmployees);
+                        }
+                    }
+                }
+            }
+
             do
             {
                 Console.WriteLine("Enter the Employee ID: ");
@@ -208,9 +280,7 @@ namespace _19June
             }
             while (y == 'Y');
 
-            string fileName = "Employee Details.xml";
-            XmlSerializer serializer = new XmlSerializer(typeof(List<EmployeeDetails>));
-            using (FileStream fs = new FileStream(fileName, FileMode.Append, FileAccess.Write))
+            using (FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
                 serializer.Serialize(fs, employees);
             }
@@ -218,54 +288,11 @@ namespace _19June
 
         static void Main(string[] args) 
         {
-            //save text, save excel, save xml, save pdf
-            try
-            {
-                string fileName = "employee_details.pdf";
-                PdfWriter writer = new PdfWriter(fileName);
-                PdfDocument pdf = new PdfDocument(writer);
-                Document document = new Document(pdf);
-
-                char y = 'Y';
-                do
-                {
-                    Console.WriteLine("Enter the Employee ID: ");
-                    string emp_id = Console.ReadLine();
-                    Console.WriteLine();
-
-                    Console.WriteLine("Enter the Employee Name: ");
-                    string emp_name = Console.ReadLine();
-                    Console.WriteLine();
-
-                    Console.WriteLine("Enter the Employee Salary: ");
-                    int salary = Convert.ToInt32(Console.ReadLine());
-                    string salary_str = Convert.ToString(salary);
-                    Console.WriteLine();
-
-                    double tax = tax_calc(salary);
-                    string tax_str = Convert.ToString(tax);
-                    double pf = 0.12 * salary;
-                    string pf_str = Convert.ToString(pf);
-
-                    // Create the PDF document
-                    Append_to_PDF(document, emp_id, emp_name, salary_str, tax_str, pf_str);
-
-                    Console.WriteLine("Would you like to record another Employee? Enter Y if yes");
-                    y = Convert.ToChar(Console.ReadLine().ToUpper());
-                    Console.WriteLine();
-                }
-                while (y == 'Y');
-                document.Close();
-            }
-
-            //catch (PdfException ex) { Console.WriteLine("An unexpected error occurred: " + ex.Message); }
-
-            catch (Exception ex) 
-            {
-                Console.WriteLine("An unexpected error occurred: " + ex.Message);
-            }
-
-
+            //save text, save excel, save xml, save pdf - homework
+            //export_to_text_file();
+            //export_to_excel();
+            export_to_xml();
+            //export_to_pdf();
 
 
 
@@ -286,8 +313,6 @@ namespace _19June
                 y = Convert.ToChar(Console.ReadLine().ToUpper());
                 Console.WriteLine();
             } while (y == 'Y');*/
-
-
 
 
 
@@ -331,8 +356,6 @@ namespace _19June
                 Console.WriteLine();
             }
             while (y == 'Y');*/
-
-
 
 
 
@@ -416,8 +439,6 @@ namespace _19June
                 Console.WriteLine();
             } 
             while (y == 'Y');*/
-
-
 
 
 
