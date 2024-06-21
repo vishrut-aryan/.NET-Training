@@ -41,6 +41,45 @@ namespace _21June
         }
     }
 
+    public class Holtec
+    {
+        public int RegNo;
+        public int EmpCount;
+
+        public Holtec()
+        {
+            Console.WriteLine("Default Constructor");
+            Console.WriteLine("");
+        }
+
+        public Holtec(int x)
+        {
+            Console.WriteLine("Parameterized Constructor");
+            Console.WriteLine("");
+            privatized();
+        }
+
+        static Holtec()
+        {
+            Console.WriteLine("Static Constructor");
+            Console.WriteLine("");
+        }
+
+        private Holtec(int x, int y)
+        {
+            Console.WriteLine("Private Constructor");
+            Console.WriteLine("");
+        }
+
+        public Holtec(Holtec h)
+        {
+            Console.WriteLine("Copy Constructor");
+            Console.WriteLine("");
+        }
+
+        public void privatized() { Holtec h5 = new Holtec(10, 10); }
+    }
+    
     internal sealed class Static
     {
         public static void _static()
@@ -88,8 +127,12 @@ namespace _21June
             //interfacing i1 = new interfacing();
             //i1.Display();
 
-            StudentMarks studentMarks = new StudentMarks();
-            studentMarks.Display();
+            //StudentMarks studentMarks = new StudentMarks();
+            //studentMarks.Display();
+
+            Holtec h1 = new Holtec();
+            Holtec h2 = new Holtec(10);
+            Holtec h3 = new Holtec(h1);
 
             Console.ReadLine();
         }
