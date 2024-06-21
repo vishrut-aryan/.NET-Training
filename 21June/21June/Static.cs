@@ -41,7 +41,7 @@ namespace _21June
         }
     }
 
-    internal class Static
+    internal sealed class Static
     {
         public static void _static()
         {
@@ -71,7 +71,7 @@ namespace _21June
             Console.WriteLine("");
         }
 
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             //Static._static();
 
@@ -84,6 +84,12 @@ namespace _21June
             //Inherit.timestwo(7);
             //Inherit.timesthree(7);
             //Inherit.timesfour(7);
+
+            //interfacing i1 = new interfacing();
+            //i1.Display();
+
+            StudentMarks studentMarks = new StudentMarks();
+            studentMarks.Display();
 
             Console.ReadLine();
         }

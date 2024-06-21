@@ -33,7 +33,7 @@ namespace _21June
         public Grandchild(int n) : base(n) { num += n; Console.WriteLine("Hello Great Grand Child"); }
     }
 
-    public class Greatgrandchild : Grandchild
+    public sealed class Greatgrandchild : Grandchild
     {
         public int d = 40;
         public Greatgrandchild() { c = 30; num = num * num; }
