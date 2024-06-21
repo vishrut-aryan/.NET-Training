@@ -8,7 +8,7 @@ namespace _21June
 {
     public static class Config
     {
-        public static string filepath = @"D:\Data\";
+        public static string filepath = @"D:\Data\";  // '\' this slash gives .NET an error, so the '@' is required or '\\' to still display the required output
         static string servername = "localhost";
 
         public static void Display()
@@ -41,9 +41,9 @@ namespace _21June
         }
     }
 
-    internal class Program
+    internal class Static
     {
-        static void Main(string[] args)
+        public static void _static()
         {
             static_data_member emp1 = new static_data_member();
             static_data_member emp2 = new static_data_member();
@@ -69,6 +69,21 @@ namespace _21June
             Console.WriteLine("File Path:         " + Config.filepath);
             Config.Display();
             Console.WriteLine("");
+        }
+
+        static void Main(string[] args)
+        {
+            //Static._static();
+
+            //Inherit.inherit();
+
+            //Inherit.powertwo();
+            //Inherit.powerfour();
+            //Inherit.powersixteen();
+
+            //Inherit.timestwo(7);
+            //Inherit.timesthree(7);
+            //Inherit.timesfour(7);
 
             Console.ReadLine();
         }
