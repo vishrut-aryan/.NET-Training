@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
+using _19June;
 
 namespace _25June
 {
@@ -58,6 +59,8 @@ namespace _25June
 
     internal class Program
     {
+        static int num1 = 6;
+        static int num2 = 5;
         static void ReadData(ArrayList ar) // Generic Class - Strongly Typed Class
         {
             // Generic Collection - Strongly Typed Collection
@@ -65,25 +68,67 @@ namespace _25June
             List<string> slist = new List<string>();
         }
 
-        static void add(int n1, int n2) { Console.WriteLine(n1 + n2); }
-        static void subtract(int n1, int n2) { Console.WriteLine(n1 - n2); }
+        static void add(int n1, int n2) { Console.WriteLine(n1 + n2); Console.WriteLine(); }
+        static void subtract(int n1, int n2) { Console.WriteLine(n1 - n2); Console.WriteLine(); }
 
 
         public static void Event(dlg d) 
         {
             dlg d1 = new dlg(add);
             dlg d2 = new dlg(subtract);
-            d1.Invoke(6, 5);
-            d2.Invoke(6, 5);
+            d1.Invoke(num1, num2);
+            d2.Invoke(num1, num2);
 
-            d(200, 100);
+            d(num1, num2);
         }
 
         static void Main(string[] args)
         {
-            dlg d0 = new dlg (add);
+            /*EmployeeDetails emp1 = new EmployeeDetails();
+            emp1.EmployeeID = "HA000";
+            emp1.EmployeeName = "Vishrut Aryan";
+            emp1.Salary = 40000;
+            emp1.Tax = 0.1 * emp1.Salary;
+            emp1.PF = 0.12 * emp1.Salary;
+
+            Console.WriteLine(emp1.Salary - (emp1.Tax + emp1.PF));*/
+
+            DirectoryInfo d1 = new DirectoryInfo(@"C:\Users\varyan\source\repos\.NET Training\25June\25June\bin\Debug\");
+            IEnumerator e1 = d1.EnumerateFileSystemInfos().GetEnumerator();
+            while (e1.MoveNext())
+            {
+                Console.WriteLine(e1.Current);
+            }
+            Console.WriteLine();
+
+            FileInfo f1 = new FileInfo(@"C:\Users\varyan\source\repos\.NET Training\25June\25June\bin\Debug\ErrorLog.txt");
+            char divider = '\\';
+            string[] dirsys = f1.FullName.Split(divider);
+            foreach (string dir in dirsys)
+                Console.WriteLine(dir);
+            Console.WriteLine();
+
+            string[] drives = Directory.GetLogicalDrives();
+            foreach (string drive in drives)
+               Console.WriteLine(drive);
+            Console.WriteLine();
+
+            dirsys = Directory.GetDirectories(@"C:\Users\varyan\Downloads");
+            foreach (string dir in dirsys)
+               Console.WriteLine(dir);
+            Console.WriteLine();
+
+            Console.WriteLine(Directory.GetLastWriteTime(@"C:\Users\varyan\source\repos\.NET Training\25June\25June\bin\Debug\ErrorLog.txt"));
+            Console.WriteLine(File.ReadAllText(@"C:\Users\varyan\source\repos\.NET Training\25June\25June\bin\Debug\ErrorLog.txt"));
+
+
+            /*dlg d0 = new dlg(add);
             d0 += new dlg(subtract);
-            Event(d0);
+            
+            d0 += new dlg(add);
+            d0 -= new dlg(add);
+
+            Event(d0);*/
 
             //string words = "Hi, I am Vishrut Aryan!";
             //Console.WriteLine(words.Word_Count(words));

@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6D7E4C23-573F-457B-ACBE-568D0626A7BB}</ProjectGuid>
+    <ProjectGuid>{7AE20F41-F97E-407B-9ABB-B9351CFDC606}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>_25June</RootNamespace>
-    <AssemblyName>25June</AssemblyName>
+    <RootNamespace>WebScrapingTool</RootNamespace>
+    <AssemblyName>WebScrapingTool</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -32,13 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="19June">
-      <HintPath>..\..\19June\19June\bin\Debug\19June.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
