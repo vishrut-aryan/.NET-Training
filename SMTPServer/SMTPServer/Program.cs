@@ -8,11 +8,25 @@ using SmtpServer;
 using SmtpServer.Protocol;
 using SmtpServer.Storage;
 
+
+// It broken :p
+
+
 namespace BasicSmtpServer
 {
     class Program
     {
         static async Task Main(string[] args)
+        {
+            try
+            {
+                Servering();
+            }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
+            Console.ReadLine();
+        }
+
+        public static async void Servering ()
         {
             var services = new ServiceCollection()
                 .AddSingleton<IMessageStore, SampleMessageStore>()
