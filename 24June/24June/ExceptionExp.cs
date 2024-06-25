@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,8 +23,8 @@ namespace ExceptionExp
     public class bankacc
     {
         private int _accno;
-        private string _accname;
-        private double _balance;
+        public string _accname;
+        public double _balance;
 
         public bankacc()
         {
@@ -47,8 +48,49 @@ namespace ExceptionExp
                 Console.WriteLine();
 
                 Console.WriteLine("Account Recorded");
+                Console.WriteLine();
             }
-            catch (Exception ex) { Console.WriteLine((ex.Message)); }
+            catch (Exception ex) 
+            {
+                Console.WriteLine();
+                Console.WriteLine();
+
+                string fileName = "ErrorLog.txt";
+                string priorText = File.ReadAllText(fileName);
+
+                using (StreamWriter writer = new StreamWriter(fileName))
+                {
+                    Console.Write((" || " + System.DateTime.Now.ToString()) + " || ");
+                    Console.WriteLine();
+                    Console.WriteLine(("    Error Message:   " + ex.Message));
+                    Console.WriteLine();
+                    Console.WriteLine(("    Error Type:      " + ex.GetType()));
+                    Console.WriteLine();
+                    Console.WriteLine(("    Source:          " + ex.Source));
+                    Console.WriteLine();
+                    Console.WriteLine(("    Stack Trace:  " + ex.StackTrace));
+                    Console.WriteLine();
+                    Console.WriteLine(("    Target Site:     " + ex.TargetSite));
+                    Console.WriteLine();
+                    Console.WriteLine(("    Inner Exception: " + ex.InnerException));
+                    Console.WriteLine();
+                    Console.WriteLine();
+                }
+                string readText = File.ReadAllText(fileName);
+                
+                using (StreamWriter writer = new StreamWriter(fileName))
+                {
+                    Console.WriteLine("Would you like to clear the file before writing? Enter Y if yes");
+                    if ("Y" != Console.ReadLine().ToUpper())
+                    {
+                        writer.WriteLine(priorText);
+                    }
+                    writer.WriteLine(readText);
+                }
+                string finalReadText = File.ReadAllText(fileName);
+
+                Console.WriteLine(finalReadText);
+            }
         }
     }
 }
