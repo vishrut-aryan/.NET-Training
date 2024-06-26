@@ -1,52 +1,105 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
-namespace MultiThreading
+namespace AsyncBreakfast
 {
-    public class Threads
+    internal class Bacon { }
+    internal class Coffee { }
+    internal class Egg { }
+    internal class Juice { }
+    internal class Toast { }
+
+    class Program
     {
-        public static void method1()
+        static async Task Main(string[] args)
         {
+            Coffee cup = PourCoffee();
+            Console.WriteLine("coffee is ready");
+            Console.WriteLine();
 
-            for (int I = 0; I <= 10; I++)
-            {
-                Console.WriteLine("Method1 is : {0}", I);
-                //Thread.Sleep(1000);
+            Egg eggs = await FryEggsAsync(2);
+            Console.WriteLine("eggs are ready");
+            Console.WriteLine();
 
-                if (I == 5)
-                {
-                    Thread.Sleep(2000);
-                }
-            }
+            Bacon bacon = await FryBaconAsync(3);
+            Console.WriteLine("bacon is ready");
+            Console.WriteLine();
+
+            Toast toast = await ToastBreadAsync(2);
+            ApplyButter(toast);
+            ApplyJam(toast);
+            Console.WriteLine("toast is ready");
+            Console.WriteLine();
+
+            Juice oj = PourOJ();
+            Console.WriteLine("oj is ready");
+            Console.WriteLine();
+
+            Console.WriteLine("Breakfast is ready!");
         }
 
-        public static void method2()
+        private static Juice PourOJ()
         {
-            for (int J = 0; J <= 10; J++)
-            {
-                Console.WriteLine("Method2 is : {0}", J);
-                //Thread.Sleep(1000);
-            }
+            Console.WriteLine("Pouring orange juice");
+            return new Juice();
         }
 
-        static public void Main()
+        private static void ApplyJam(Toast toast) =>
+            Console.WriteLine("Putting jam on the toast");
+
+        private static void ApplyButter(Toast toast) =>
+            Console.WriteLine("Putting butter on the toast");
+
+        private static async Task<Toast> ToastBreadAsync(int slices)
         {
-            // Single Threaded
-            //method1();
-            //method2();
+            for (int slice = 0; slice < slices; slice++)
+            {
+                Console.WriteLine("Putting a slice of bread in the toaster");
+            }
+            Console.WriteLine("Start toasting...");
+            Console.WriteLine();
+            await Task.Delay(3000);
+            Console.WriteLine("Remove toast from toaster");
 
-            // Multi Threaded
-            Thread thr1 = new Thread(method1);
-            Thread thr2 = new Thread(method2);
-            thr1.Start();
-            thr2.Start();
+            return new Toast();
+        }
 
-            Console.ReadLine();
+        private static async Task<Bacon> FryBaconAsync(int slices)
+        {
+            Console.WriteLine($"putting {slices} slices of bacon in the pan");
+            Console.WriteLine("cooking first side of bacon...");
+            Console.WriteLine();
+            await Task.Delay(3000);
+            for (int slice = 0; slice < slices; slice++)
+            {
+                Console.WriteLine("flipping a slice of bacon");
+            }
+            Console.WriteLine("cooking the second side of bacon...");
+            Console.WriteLine();
+            await Task.Delay(3000);
+            Console.WriteLine("Put bacon on plate");
+
+            return new Bacon();
+        }
+
+        private static async Task<Egg> FryEggsAsync(int howMany)
+        {
+            Console.WriteLine("Warming the egg pan...");
+            Console.WriteLine();
+            await Task.Delay(3000);
+            Console.WriteLine($"cracking {howMany} eggs");
+            Console.WriteLine("cooking the eggs ...");
+            Console.WriteLine();
+            await Task.Delay(3000);
+            Console.WriteLine("Put eggs on plate");
+
+            return new Egg();
+        }
+
+        private static Coffee PourCoffee()
+        {
+            Console.WriteLine("Pouring coffee");
+            return new Coffee();
         }
     }
 }
